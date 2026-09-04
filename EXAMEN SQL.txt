@@ -1,0 +1,313 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+DROP SCHEMA IF EXISTS `mydb` ;
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
+USE `mydb` ;
+
+-- -----------------------------------------------------
+-- Table `mydb`.`clientes`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`clientes` ;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`clientes` (
+  `id` INT NOT NULL,
+  `nombre` VARCHAR(45) NOT NULL,
+  `apellido` VARCHAR(45) NOT NULL,
+  `telefono` VARCHAR(45) NOT NULL,
+  `direccion` VARCHAR(45) NOT NULL,
+  `cc` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`categoria`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`categoria` ;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`categoria` (
+  `id` INT NOT NULL,
+  `nombre` VARCHAR(45) NOT NULL,
+  `descripcion` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`proveedores`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`proveedores` ;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`proveedores` (
+  `id` INT NOT NULL,
+  `nombre` VARCHAR(45) NOT NULL,
+  `contactos` VARCHAR(45) NOT NULL,
+  `telefono` VARCHAR(45) NOT NULL,
+  `direccion` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`productos`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`productos` ;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`productos` (
+  `id` INT NOT NULL,
+  `nombre` VARCHAR(45) NOT NULL,
+  `precio` DECIMAL NOT NULL,
+  `stock` INT NOT NULL,
+  `categoria_fk` INT NOT NULL,
+  `proveedor_fk` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_producto_categoria_idx` (`categoria_fk` ASC) VISIBLE,
+  INDEX `fk_proveedor_producto_idx` (`proveedor_fk` ASC) VISIBLE,
+  CONSTRAINT `fk_producto_categoria`
+    FOREIGN KEY (`categoria_fk`)
+    REFERENCES `mydb`.`categoria` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_proveedor_producto`
+    FOREIGN KEY (`proveedor_fk`)
+    REFERENCES `mydb`.`proveedores` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`pedido`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`pedido` ;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`pedido` (
+  `id` INT NOT NULL,
+  `fecha` DATETIME NOT NULL,
+  `total` DECIMAL NOT NULL,
+  `estado` VARCHAR(45) NOT NULL,
+  `clientes_fk` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_venta_clientes_idx` (`clientes_fk` ASC) VISIBLE,
+  CONSTRAINT `fk_venta_clientes`
+    FOREIGN KEY (`clientes_fk`)
+    REFERENCES `mydb`.`clientes` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `mydb`.`detalle_pedido`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `mydb`.`detalle_pedido` ;
+
+CREATE TABLE IF NOT EXISTS `mydb`.`detalle_pedido` (
+  `id` INT NOT NULL,
+  `pedido_fk` INT NOT NULL,
+  `producto_fk` INT NOT NULL,
+  `cantidad` INT NOT NULL,
+  `precio_unitario` DECIMAL NOT NULL,
+  `subtotal` DECIMAL NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `fk_detalle_pedido_pedido_idx` (`pedido_fk` ASC) VISIBLE,
+  INDEX `fk_detalle_pedido_producto_idx` (`producto_fk` ASC) VISIBLE,
+  CONSTRAINT `fk_detalle_pedido_pedido`
+    FOREIGN KEY (`pedido_fk`)
+    REFERENCES `mydb`.`pedido` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_detalle_pedido_producto`
+    FOREIGN KEY (`producto_fk`)
+    REFERENCES `mydb`.`productos` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+
+
+USE `mydb`;
+
+-- -----------------------------------------------------
+-- Población de la tabla: clientes
+-- -----------------------------------------------------
+INSERT INTO `clientes` (`id`, `nombre`, `apellido`, `telefono`, `direccion`, `cc`) VALUES
+(1, 'Carlos Andrés', 'Mendoza Ríos', '3104567890', 'Cra 43A # 12-45, Medellín', '1017234567'),
+(2, 'María Fernanda', 'Gómez Torres', '3158901234', 'Cl 72 # 10-34, Bogotá', '1020456789'),
+(3, 'Juan David', 'Rodríguez Silva', '3002345678', 'Av 6N # 22-15, Cali', '1098765432'),
+(4, 'Diana Marcela', 'Ospina Castro', '3187654321', 'Cra 27 # 36-18, Bucaramanga', '1032145698'),
+(5, 'Santiago', 'López Restrepo', '3113456789', 'Cl 10 # 5-21, Pereira', '1088123456'),
+(6, 'Valentina', 'Martínez Hoyos', '3209876543', 'Cra 53 # 75-125, Barranquilla', '1045678901'),
+(7, 'Andrés Felipe', 'Vargas Morales', '3016543210', 'Cl 15 # 24-08, Pasto', '1085234167'),
+(8, 'Camila Andrea', 'Hernández Patiño', '3164321098', 'Cra 5 # 14-30, Ibagué', '1010987654'),
+(9, 'Jorge Eliécer', 'Gaitán Suárez', '3145678901', 'Cl 34 # 19-42, Manizales', '1053216789'),
+(10, 'Daniela', 'Córdoba Ramos', '3023456789', 'Cra 9 # 11-50, Neiva', '1075432189');
+
+
+USE `mydb`;
+
+-- -----------------------------------------------------
+-- Población de la tabla: categoria
+-- -----------------------------------------------------
+INSERT INTO `categoria` (`id`, `nombre`, `descripcion`) VALUES
+(1, 'Tecnología', 'Equipos electrónicos y accesorios'),
+(2, 'Electrodomésticos', 'Aparatos para el hogar y cocina'),
+(3, 'Hogar y Muebles', 'Mobiliario y decoración para el hogar'),
+(4, 'Ropa y Calzado', 'Prenda de vestir para dama y caballero'),
+(5, 'Alimentos y Bebidas', 'Productos de la canasta familiar');
+
+USE `mydb`;
+
+-- -----------------------------------------------------
+-- Población de la tabla: proveedores
+-- -----------------------------------------------------
+INSERT INTO `proveedores` (`id`, `nombre`, `contactos`, `telefono`, `direccion`) VALUES
+(1, 'Distribuidora Nacional S.A.S.', 'Pedro Infante', '6013158000', 'Cl 26 # 68C-61, Bogotá'),
+(2, 'Comercializadora del Valle Ltda.', 'Gloria Restrepo', '6026601200', 'Cl 10 # 4-47, Cali'),
+(3, 'Importaciones Colombia Express', 'Héctor Jiménez', '6044445566', 'Cra 48 # 20-114, Medellín'),
+(4, 'Suministros del Caribe S.A.', 'Lucía Bermúdez', '6053709000', 'Via 40 # 73-290, Barranquilla'),
+(5, 'Grupo Empresarial Santander', 'Mauricio Gómez', '6076334455', 'Cra 15 # 31-42, Bucaramanga');
+
+
+USE `mydb`;
+
+-- -----------------------------------------------------
+-- Población de la tabla: productos
+-- -----------------------------------------------------
+INSERT INTO `productos` (`id`, `nombre`, `precio`, `stock`, `categoria_fk`, `proveedor_fk`) VALUES
+(1, 'Computador Portátil Lenovo 15.6"', '2850000', '15', 1, 1),
+(2, 'Mouse Inalámbrico Logitech', '85000', '40', 1, 3),
+(3, 'Nevera Haceb 230 Lts', '1650000', '8', 2, 1),
+(4, 'Horno Microondas LG 20L', '420000', '12', 2, 2),
+(5, 'Silla de Escritorio Ergonómica', '380000', '25', 3, 5),
+(6, 'Escritorio Moderno en Madera', '520000', '10', 3, 2),
+(7, 'Camisa Formal Manga Larga', '120000', '50', 4, 3),
+(8, 'Jeans Clasico Caballero', '150000', '30', 4, 4),
+(9, 'Café Molido Premium 500g', '24000', '100', 5, 2),
+(10, 'Aceite de Oliva Extra Virgen 500ml', '38000', '60', 5, 4);
+
+USE `mydb`;
+
+-- -----------------------------------------------------
+-- Población de la tabla: pedido
+-- -----------------------------------------------------
+INSERT INTO `pedido` (`id`, `fecha`, `total`, `estado`, `clientes_fk`) VALUES
+(1, '2026-08-10 10:30:00', 2935000.00, 'Completado', 1),
+(2, '2026-08-12 14:15:00', 1650000.00, 'Completado', 2),
+(3, '2026-08-15 09:45:00', 900000.00, 'Enviado', 3),
+(4, '2026-08-18 16:20:00', 270000.00, 'Completado', 4),
+(5, '2026-08-20 11:10:00', 86000.00, 'Pendiente', 5),
+(6, '2026-08-22 15:00:00', 2850000.00, 'Completado', 6),
+(7, '2026-08-25 13:40:00', 800000.00, 'Cancelado', 7),
+(8, '2026-08-28 17:05:00', 380000.00, 'Completado', 8),
+(9, '2026-09-01 08:30:00', 2070000.00, 'En proceso', 9),
+(10, '2026-09-02 12:00:00', 120000.00, 'Pendiente', 10);
+
+USE `mydb`;
+
+-- -----------------------------------------------------
+-- Población de la tabla: detalle_pedido
+-- -----------------------------------------------------
+INSERT INTO `detalle_pedido` (`id`, `pedido_fk`, `producto_fk`, `cantidad`, `precio_unitario`, `subtotal`) VALUES
+-- Pedido 1 (Total: 2,935,000)
+(1, 1, 1, 1, 2850000.00, 2850000.00),
+(2, 1, 2, 1, 85000.00, 85000.00),
+
+-- Pedido 2 (Total: 1,650,000)
+(3, 2, 3, 1, 1650000.00, 1650000.00),
+
+-- Pedido 3 (Total: 900,000)
+(4, 3, 5, 1, 380000.00, 380000.00),
+(5, 3, 6, 1, 520000.00, 520000.00),
+
+-- Pedido 4 (Total: 270,000)
+(6, 4, 7, 1, 120000.00, 120000.00),
+(7, 4, 8, 1, 150000.00, 150000.00),
+
+-- Pedido 5 (Total: 86,000)
+(8, 5, 9, 2, 24000.00, 48000.00),
+(9, 5, 10, 1, 38000.00, 38000.00),
+
+-- Pedido 6 (Total: 2,850,000)
+(10, 6, 1, 1, 2850000.00, 2850000.00),
+
+-- Pedido 7 (Total: 800,000)
+(11, 7, 4, 1, 420000.00, 420000.00),
+(12, 7, 5, 1, 380000.00, 380000.00),
+
+-- Pedido 8 (Total: 380,000)
+(13, 8, 5, 1, 380000.00, 380000.00),
+
+-- Pedido 9 (Total: 2,070,000)
+(14, 9, 3, 1, 1650000.00, 1650000.00),
+(15, 9, 4, 1, 420000.00, 420000.00),
+
+-- Pedido 10 (Total: 120,000)
+(16, 10, 7, 1, 120000.00, 120000.00);
+
+
+
+SELECT 
+p.nombre AS producto,
+p.precio,
+c.nombre AS categoria,
+pr.nombre AS proveedor
+FROM productos p
+JOIN categoria c ON p.categoria_fk = c.id
+JOIN proveedores pr ON p.proveedor_fk = pr.id;
+
+
+SELECT 
+p.id,
+p.nombre AS producto,
+COUNT(dp.pedido_fk) AS cantidad_pedidos
+FROM productos p
+JOIN detalle_pedido dp ON p.id = dp.producto_fk
+GROUP BY p.id, p.nombre
+ORDER BY cantidad_pedidos DESC;
+
+SELECT 
+c.id,
+CONCAT(c.nombre, ' ', c.apellido) AS cliente,
+COUNT(p.id) AS total_pedidos
+FROM clientes c
+LEFT JOIN pedido p ON c.id = p.clientes_fk
+GROUP BY c.id, c.nombre, c.apellido;
+
+SELECT 
+CONCAT(c.nombre, ' ', c.apellido) AS nombre_completo,
+COUNT(p.id) AS cantidad_pedidos,
+SUM(p.total) AS total_facturado
+FROM clientes c
+JOIN pedido p ON c.id = p.clientes_fk
+GROUP BY c.id, c.nombre, c.apellido
+HAVING SUM(p.total) > 500000
+ORDER BY total_facturado DESC;
+
+
+SELECT 
+productos.nombre AS Nombre_del_producto,
+productos.precio AS Precio,
+categoria.nombre AS Categoría,
+proveedores.nombre AS Proveedor
+FROM productos
+JOIN categoria ON productos.categoria_fk = categoria.id
+JOIN proveedores ON productos.proveedor_fk = proveedores.id
+LEFT JOIN detalle_pedido ON productos.id = detalle_pedido.producto_fk
+WHERE detalle_pedido.producto_fk IS NULL;
