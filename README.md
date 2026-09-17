@@ -8,7 +8,7 @@
 
 El presente documento constituye la documentacion tecnica y explicativa del sistema de base de datos relacional disenado para la pizzeria **"Don Piccolo"**. Este sistema gestiona de manera integral todos los procesos operativos y administrativos del negocio, abarcando el control de clientes, repartidores, inventario de ingredientes, gestion de recetas, procesamiento de pedidos, asignacion de domicilios y auditoria de precios.
 
-La base de datos ha sido desarrollada bajo el motor **MySQL / MariaDB**, estructurandose en multiples tablas maestras, transaccionales, intermedias y de auditoria, complementadas con componentes programables avanzados como **consultas SQL complejas, vistas, funciones almacenadas, procedimientos almacenados y disparadores (triggers)**.
+La base de datos ha sido desarrollada bajo el motor **MySQL** , estructurandose en multiples tablas maestras, transaccionales, intermedias y de auditoria, complementadas con componentes programables avanzados como **consultas SQL complejas, vistas, funciones almacenadas, procedimientos almacenados y disparadores (triggers)**.
 
 ---
 
