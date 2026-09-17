@@ -1,10 +1,7 @@
--- Crear la base de datos y usarla
-CREATE DATABASE IF NOT EXISTS DonPiccolo;
+CREATE DATABASE DonPiccolo;
 USE DonPiccolo;
 
--- ==========================================
 -- 1. TABLAS MAESTRAS
--- ==========================================
 
 CREATE TABLE Clientes (
     id_cliente INT AUTO_INCREMENT PRIMARY KEY,
@@ -29,9 +26,7 @@ CREATE TABLE Ingredientes (
     costo_unidad DECIMAL(10,2) NOT NULL
 );
 
--- ==========================================
 -- 2. TABLAS DE PRODUCTOS (PIZZAS Y RECETAS)
--- ==========================================
 
 CREATE TABLE Pizzas (
     id_pizza INT AUTO_INCREMENT PRIMARY KEY,
@@ -51,9 +46,7 @@ CREATE TABLE Pizza_Ingredientes (
     FOREIGN KEY (id_ingrediente) REFERENCES Ingredientes(id_ingrediente) ON DELETE CASCADE
 );
 
--- ==========================================
 -- 3. TABLAS TRANSACCIONALES (PEDIDOS Y DOMICILIOS)
--- ==========================================
 
 CREATE TABLE Pedidos (
     id_pedido INT AUTO_INCREMENT PRIMARY KEY,
@@ -88,9 +81,7 @@ CREATE TABLE Domicilios (
     FOREIGN KEY (id_repartidor) REFERENCES Repartidores(id_repartidor)
 );
 
--- ==========================================
 -- 4. TABLA DE AUDITORÍA
--- ==========================================
 
 CREATE TABLE Historial_Precios (
     id_historial INT AUTO_INCREMENT PRIMARY KEY,
