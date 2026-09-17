@@ -23,7 +23,11 @@ BEGIN
 
     RETURN v_total;
 END //
+DELIMITER ;
 
+SELECT calcular_total_pedido(1) AS total_calculado_pedido_1;
+
+DELIMITER //
 -- 2. FUNCIÓN: Calcular la ganancia neta diaria
 CREATE FUNCTION calcular_ganancia_diaria(p_fecha DATE)
 RETURNS DECIMAL(10,2)
@@ -45,6 +49,10 @@ BEGIN
     
     RETURN v_total_ventas - v_total_costos;
 END //
+DELIMITER ;
+
+DELIMITER //
+SELECT calcular_ganancia_diaria('2026-09-01') AS ganancia_neta_2026_09_01;
 
 -- 3. PROCEDIMIENTO ALMACENADO: Registrar entrega de pedido
 CREATE PROCEDURE registrar_entrega(IN p_id_pedido INT, IN p_hora_entrega DATETIME)
@@ -57,5 +65,15 @@ BEGIN
     SET estado = 'entregado'
     WHERE id_pedido = p_id_pedido;
 END //
+
+SELECT p.id_pedido, p.estado, d.hora_entrega 
+FROM Pedidos p 
+LEFT JOIN Domicilios d ON p.id_pedido = d.id_pedido 
+WHERE p.id_pedido = 8;
+CALL registrar_entrega(8, '2026-09-15 21:40:00');
+SELECT p.id_pedido, p.estado, d.hora_entrega 
+FROM Pedidos p 
+LEFT JOIN Domicilios d ON p.id_pedido = d.id_pedido 
+WHERE p.id_pedido = 8;
 
 DELIMITER ;
